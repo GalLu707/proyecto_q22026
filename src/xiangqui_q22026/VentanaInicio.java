@@ -22,7 +22,7 @@ import javax.swing.border.Border;
  * @author USER
  */
 public class VentanaInicio extends JFrame{
-    private PlayerManager manager;
+    private final PlayerManager manager;
     
   public VentanaInicio() {
           manager = new PlayerManager();
@@ -31,7 +31,8 @@ public class VentanaInicio extends JFrame{
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         
-       
+        PanelImagen fondo = new PanelImagen("/Imagenes/Login.jpg");
+       this.setContentPane(fondo);
         setLayout(new GridLayout(5, 1, 10, 20)); 
 
 
@@ -50,7 +51,7 @@ public class VentanaInicio extends JFrame{
        
         JLabel titulo = new JLabel("BIENVENIDO A XIANGQI", SwingConstants.CENTER);
         titulo.setFont(new Font("Serif", Font.BOLD, 28));
-        
+        titulo.setForeground(Color.white);
         add(titulo);
         add(btnLogin);
         add(btnCrear);

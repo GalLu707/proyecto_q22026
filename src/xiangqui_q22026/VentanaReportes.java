@@ -23,7 +23,7 @@ import javax.swing.table.DefaultTableModel;
  * @author USER
  */
 public class VentanaReportes extends JFrame{
-    
+    private JTextArea txtLogs; 
      private PlayerManager manager;
 
     public VentanaReportes() {
@@ -75,20 +75,38 @@ public class VentanaReportes extends JFrame{
     }
 
     private JPanel crearPanelLogs() {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+          JPanel panel = new JPanel(new BorderLayout());
+    panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+    txtLogs = new JTextArea(); 
+    txtLogs.setEditable(false);
+    
+    panel.add(new JScrollPane(txtLogs), BorderLayout.CENTER);
+    
+    cargarHistorialEnPantalla(); 
+    
+    return panel;
         
-        
-        JTextArea txtLogs = new JTextArea();
-        txtLogs.setEditable(false);
-        txtLogs.setText("--- Historial de Partidas Recientes ---\n");
-        
-       
-        panel.add(new JScrollPane(txtLogs), BorderLayout.CENTER);
-        return panel;
+
     }
     
+    private void cargarHistorialEnPantalla() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("--- Historial de Partidas Recientes ---\n\n");
     
+    java.util.ArrayList<String> logs = PlayerManager.getHistorialPartidas();
+    
+    if (logs.isEmpty()) {
+        sb.append("Aún no se han jugado partidas en esta sesión.");
+    } else {
+        
+        for (String log : logs) {
+            sb.append("• ").append(log).append("\n");
+        }
+    }
+    
+    txtLogs.setText(sb.toString());
+}
     
     
     

@@ -14,7 +14,7 @@ import javax.swing.JOptionPane;
 public class PlayerManager implements IDataManager{
     private static ArrayList<Player> usuarios = new ArrayList<>();
     private static Player usuarioLogueado = null;
-
+    private static java.util.ArrayList<String> historialPartidas = new java.util.ArrayList<>();
     @Override
     public Player buscarUsuario(String username) {
         for (Player p : usuarios) {
@@ -73,13 +73,27 @@ public class PlayerManager implements IDataManager{
         // manager.registrarPartida(jugador1, jugador2, ganador);
     }
     
-    new VentanaPrincipal().setVisible(true);
+  
+    
+    
+   // new VentanaPrincipal().setVisible(true);
     //this.dispose();
-}
+
+
+    
 
     
     
-    
-    
-    
 }
+    
+     public static void agregarAlHistorial(String lineaLog) {
+    historialPartidas.add(lineaLog);
+}
+
+public static java.util.ArrayList<String> getHistorialPartidas() {
+    return historialPartidas;
+}
+
+
+}
+

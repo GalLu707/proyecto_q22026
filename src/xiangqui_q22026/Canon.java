@@ -22,16 +22,16 @@ public class Canon extends Pieza {
         int pasoF = calcularPaso(this.fila, dFila);
         int pasoC = calcularPaso(this.columna, dCol);
 
-        // Contamos cuántas piezas hay en la trayectoria de manera recursiva
+        // cuantas piezas hay en la trayectoria de manera recursiva
         int piezasEnMedio = contarPiezasEnLinea(this.fila + pasoF, this.columna + pasoC, dFila, dCol, pasoF, pasoC, tablero);
         Pieza destino = tablero[dFila][dCol];
 
-        // Caso 1: Desplazamiento normal (Casilla destino vacía y 0 piezas intermedias)
+        // Desplazamiento normal 
         if (destino == null && piezasEnMedio == 0) {
             return true;
         }
         
-        // Caso 2: Captura (Casilla destino con enemigo y exactamente 1 pieza intermedia para saltar)
+        // Captura 
         if (destino != null && !destino.getColor().equals(this.color) && piezasEnMedio == 1) {
             return true;
         }
@@ -39,7 +39,7 @@ public class Canon extends Pieza {
         return false;
     }
 
-    // FUNCIÓN RECURSIVA idéntica que cuenta obstáculos paso a paso
+    
     private int contarPiezasEnLinea(int fAct, int cAct, int fDest, int cDest, int pasoF, int pasoC, Pieza[][] tablero) {
         if (fAct == fDest && cAct == cDest) {
             return 0;

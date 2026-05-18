@@ -29,6 +29,7 @@ import javax.swing.border.Border;
  * @author USER
  */
 public class VentanaJuego extends JFrame {
+    private boolean partidaFinalizada = false;
     private Player jugador1;
     private Player jugador2;
     private JButton[][] casillas = new JButton[10][9]; 
@@ -242,18 +243,21 @@ public class VentanaJuego extends JFrame {
     }
 
     private void confirmarRetiro() {
-        int r = JOptionPane.showConfirmDialog(this, "¿Seguro que desea retirarse? El oponente ganará 3 puntos.", "Confirmar", JOptionPane.YES_NO_OPTION);
-        if (r == JOptionPane.YES_OPTION) {
-     
-            JOptionPane.showMessageDialog(this, "Te has retirado. " + jugador2.getUsername() + " gana 3 puntos.");
-            new VentanaPrincipal().setVisible(true);
-              Player ganador = turnoActual.equals("ROJO") ? jugador2 : jugador1;
         
-              
-              finalizarPartida(ganador);
-            
-            this.dispose();
-        }
+            if (partidaFinalizada) return; 
+
+    int r = JOptionPane.showConfirmDialog(this, "¿Seguro que desea retirarse? El oponente ganará 3 puntos.", "Confirmar", JOptionPane.YES_NO_OPTION);
+    if (r == JOptionPane.YES_OPTION) {
+        partidaFinalizada = true; 
+        
+        // El ganador es el oponente del turno actual
+        Player ganador = turnoActual.equals("ROJO") ? jugador2 : jugador1;
+        
+        // CAMBIO: Centralizamos el mensaje y el log usando "RETIRO"
+        finalizarPartida(ganador, "RETIRO");
+    }
+   
+
     }
     
     //este coso no quitar para verificar que si se toque la pieza
@@ -283,65 +287,84 @@ public class VentanaJuego extends JFrame {
     
   private void manejarClick(int f, int c) {
   
+      if (partidaFinalizada) {
+        return;
+    }
+
     if (piezaSeleccionada == null) {
         Pieza p = logicaTablero[f][c];
-        
         if (p != null && p.getColor().equals(turnoActual)) {
             piezaSeleccionada = p;
-            
         } else {
             JOptionPane.showMessageDialog(this, "No es tu turno o casilla vacía.");
         }
-    } 
-
-    else {
+    } else {
         if (piezaSeleccionada.movimientoValido(f, c, logicaTablero)) {
             Pieza destino = logicaTablero[f][c];
 
-           
             if (destino instanceof General) {
+                partidaFinalizada = true; 
+
                 logicaTablero[f][c] = piezaSeleccionada;
                 logicaTablero[piezaSeleccionada.getFila()][piezaSeleccionada.getColumna()] = null;
                 
                 Player ganador = turnoActual.equals("ROJO") ? jugador1 : jugador2;
-                finalizarPartida(ganador);
+                finalizarPartida(ganador, "Captura");
+                
+                
                 return;
             }
 
-            
             logicaTablero[f][c] = piezaSeleccionada;
             logicaTablero[piezaSeleccionada.getFila()][piezaSeleccionada.getColumna()] = null;
             piezaSeleccionada.setPosicion(f, c);
             
-       
             actualizarTableroGrafico();
-            
             
             piezaSeleccionada = null;
             cambiarTurno();
             
         } else {
-            
             piezaSeleccionada = null;
             JOptionPane.showMessageDialog(this, "Movimiento no permitido.");
         }
     }
+      
+      
+      
+      
+      
+
 }  
     
-  private void finalizarPartida(Player ganador) {
-    if (ganador != null) {
-        
+  private void finalizarPartida(Player ganador, String motivo) {
+
+         if (ganador != null) {
         ganador.setPuntos(ganador.getPuntos() + 3);
         
-        JOptionPane.showMessageDialog(this, "¡JUEGO TERMINADO!\nGanador: " + ganador.getUsername());
+        String textoLog = "";
+        if (motivo.equalsIgnoreCase("RETIRO")) {
+            Player perdedor = (ganador == jugador1) ? jugador2 : jugador1;
+            textoLog = perdedor.getUsername() + " se retiró contra " + ganador.getUsername();
+        } else if (motivo.equalsIgnoreCase("CAPTURAR")) {
+            Player perdedor = (ganador == jugador1) ? jugador2 : jugador1;
+            textoLog = ganador.getUsername() + " le ganó a " + perdedor.getUsername();
+        } else {
+            textoLog = "Partida finalizada. Ganador: " + ganador.getUsername();
+        }
         
-       
+        // ¡NUEVO!: Guardamos la línea de texto en el historial global
+        PlayerManager.agregarAlHistorial(textoLog); 
+        
+        JOptionPane.showMessageDialog(this, "¡JUEGO TERMINADO!\n" + textoLog);
+        
         new VentanaPrincipal().setVisible(true);
         this.dispose();
     }
 }
+
         
-private void actualizarTableroGrafico() {
+private void actualizarTableroGrafico(boolean[][] movimientosPermitidos) {
     for (int f = 0; f < 10; f++) {
         for (int c = 0; c < 9; c++) {
             Pieza p = logicaTablero[f][c];
@@ -380,6 +403,22 @@ private void actualizarTableroGrafico() {
                 btn.setText("");
                 btn.setIcon(null);
             }
+             if (movimientosPermitidos != null && movimientosPermitidos[f][c]) {
+                btn.setBackground(new Color(0, 255, 0, 80)); // Verde tenue translúcido
+                btn.setContentAreaFilled(true);
+            } 
+            // 2. Si es la pieza que actualmente está seleccionada por el jugador
+            else if (piezaSeleccionada != null && p == piezaSeleccionada) {
+                btn.setBackground(new Color(255, 255, 0, 120)); // Tu amarillo original
+                btn.setContentAreaFilled(true);
+            } 
+            // 3. Casilla normal
+            else {
+                btn.setContentAreaFilled(false);
+            }
+        
+   
+            
 
             if (piezaSeleccionada != null && p == piezaSeleccionada) {
                 btn.setBackground(new Color(255, 255, 0, 120)); 
@@ -392,7 +431,7 @@ private void actualizarTableroGrafico() {
     
     this.repaint();
 }
-
-        
-        
+    private void actualizarTableroGrafico() {
+    actualizarTableroGrafico(null);
+}    
 }

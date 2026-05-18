@@ -18,28 +18,28 @@ public class Carro extends Pieza{
 
     @Override
     public boolean movimientoValido(int dFila, int dCol, Pieza[][] tablero) {
-        // El Carro solo se mueve en línea recta (misma fila o misma columna)
+        // El Carro solo se mueve en linea recta (misma fila o misma columna)
         if (this.fila != dFila && this.columna != dCol) return false;
-        if (this.fila == dFila && this.columna == dCol) return false; // No se movió
+        if (this.fila == dFila && this.columna == dCol) return false; // No se movio
 
         int pasoF = calcularPaso(this.fila, dFila);
         int pasoC = calcularPaso(this.columna, dCol);
 
-        // Evaluamos de forma recursiva las piezas en la trayectoria (excluyendo el origen)
+      
         int piezasEnMedio = contarPiezasEnLinea(this.fila + pasoF, this.columna + pasoC, dFila, dCol, pasoF, pasoC, tablero);
 
         if (piezasEnMedio == 0) {
             Pieza destino = tablero[dFila][dCol];
-            // Movimiento a casilla vacía o captura de pieza enemiga
+            
             return destino == null || !destino.getColor().equals(this.color);
         }
         
         return false;
     }
 
-    // FUNCIÓN RECURSIVA para contar obstáculos en el camino
+    
     private int contarPiezasEnLinea(int fAct, int cAct, int fDest, int cDest, int pasoF, int pasoC, Pieza[][] tablero) {
-        // Caso base: llegamos a la casilla de destino, dejamos de contar hacia atrás
+        // Caso base...llegamos a la casilla de destino, dejamos de contar hacia atrás
         if (fAct == fDest && cAct == cDest) {
             return 0;
         }
@@ -47,7 +47,7 @@ public class Carro extends Pieza{
         // Si encontramos una pieza en la casilla actual, sumamos 1
         int obstaculoAqui = (tablero[fAct][cAct] != null) ? 1 : 0;
 
-        // Llamada recursiva: avanza a la siguiente casilla de la trayectoria
+        // avanza a la siguiente casilla de la trayectoria
         return obstaculoAqui + contarPiezasEnLinea(fAct + pasoF, cAct + pasoC, fDest, cDest, pasoF, pasoC, tablero);
     }
 

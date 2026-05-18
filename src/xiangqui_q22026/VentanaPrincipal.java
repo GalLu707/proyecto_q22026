@@ -39,8 +39,9 @@ public class VentanaPrincipal extends JFrame{
         setLocationRelativeTo(null);
 
      
-//        PanelImagen fondo = new PanelImagen("src/Imagenes/FondoPrincipal.png");
-//        this.setContentPane(fondo);
+       PanelImagen fondo = new PanelImagen("/Imagenes/Login.jpg");
+       this.setContentPane(fondo);
+       
         setLayout(new BorderLayout());
 
       
@@ -57,6 +58,8 @@ public class VentanaPrincipal extends JFrame{
         JLabel lblFecha = crearLabelBlanco("Miembro desde: " + sdf.format(usuarioActual.getFechaIngreso()));
         JLabel lblEstado = crearLabelBlanco("Estado: " + (usuarioActual.isActivo() ? "ACTIVO" : "INACTIVO"));
 
+        
+        
         panelDatos.add(lblUser);
         panelDatos.add(lblFecha);
         panelDatos.add(lblEstado);
@@ -110,7 +113,9 @@ public class VentanaPrincipal extends JFrame{
         btnJugar.addActionListener(e -> {
    
     VentanaJuego partida = new VentanaJuego();
-  
+    
+    
+    
     if (partida.getTitle() != null && !partida.getTitle().isEmpty()) {
         partida.setVisible(true);
         this.dispose();
@@ -130,7 +135,7 @@ public class VentanaPrincipal extends JFrame{
 
     private JLabel crearLabelBlanco(String texto) {
         JLabel label = new JLabel(texto, SwingConstants.CENTER);
-        label.setForeground(Color.BLACK); 
+        label.setForeground(Color.white); 
         label.setFont(new Font("Arial", Font.BOLD, 16));
         return label;
     }
@@ -144,18 +149,18 @@ public class VentanaPrincipal extends JFrame{
         
         if (nueva != null && nueva.length() == 5) {
             usuarioActual.setPassword(nueva);
-            JOptionPane.showMessageDialog(this, "¡Contraseña actualizada con éxito!");
+            JOptionPane.showMessageDialog(this, "¡Contraseña actualizada con exito!");
         } else if (nueva != null) {
             JOptionPane.showMessageDialog(this, "Error: La contraseña DEBE ser de 5 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     } else if (actual != null) {
-        JOptionPane.showMessageDialog(this, "Contraseña incorrecta.", "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this, "Contraseña incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
     }
 } 
     
    private void cerrarCuenta() {
     int confirm = JOptionPane.showConfirmDialog(this, 
-        "¿Estás seguro de que deseas cerrar tu cuenta? Ya no podrás iniciar sesión.", 
+        "¿Estas seguro de que deseas cerrar tu cuenta? Ya no podras iniciar sesion", 
         "Confirmar Cierre", JOptionPane.YES_NO_OPTION);
 
     if (confirm == JOptionPane.YES_OPTION) {

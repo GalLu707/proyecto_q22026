@@ -19,10 +19,10 @@ public class Caballo extends Pieza{
         int difFila = Math.abs(dFila - this.fila);
         int difCol = Math.abs(dCol - this.columna);
 
-        // Validar que el movimiento total configure una "L" (2 en un eje y 1 en el otro)
+        // Validar que el movimiento total configure una L
         if (!((difFila == 2 && difCol == 1) || (difFila == 1 && difCol == 2))) return false;
 
-        // Calculamos la dirección de la primera casilla recta del movimiento
+        
         int pasoF = 0;
         int pasoC = 0;
 
@@ -32,19 +32,18 @@ public class Caballo extends Pieza{
             pasoC = calcularPaso(this.columna, dCol); // Se mueve 2 horizontal, el primer paso es horizontal
         }
 
-        // RECURSIVIDAD: Evaluamos secuencialmente si la pata del caballo está bloqueada
+        
         if (verificarPataBloqueada(this.fila + pasoF, this.columna + pasoC, tablero)) {
             return false; 
         }
 
-        // Validar casilla destino
+        // Valida casilla destino
         Pieza destino = tablero[dFila][dCol];
         return destino == null || !destino.getColor().equals(this.color);
     }
 
-    // FUNCIÓN RECURSIVA: Evalúa el punto de apoyo inicial del caballo de manera aislada
+  
     private boolean verificarPataBloqueada(int fPata, int cPata, Pieza[][] tablero) {
-        // Base recursiva simple: si la casilla de apoyo inmediata tiene un obstáculo, bloquea el camino
         return tablero[fPata][cPata] != null;
     }
 }
