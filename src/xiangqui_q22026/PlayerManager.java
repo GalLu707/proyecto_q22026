@@ -5,6 +5,7 @@
 package xiangqui_q22026;
 
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -44,5 +45,41 @@ public class PlayerManager implements IDataManager{
         throw new UnsupportedOperationException("Not supported yet."); 
     }
 
+   public ArrayList<Player> obtenerRanking() {
+    ArrayList<Player> listaFiltrada = new ArrayList<>();
+    
+    
+    for (Player p : usuarios) {
+        if (p.isActivo()) {
+            listaFiltrada.add(p);
+        }
+    }
+    
+    
+    listaFiltrada.sort((p1, p2) -> Integer.compare(p2.getPuntos(), p1.getPuntos()));
+    
+    return listaFiltrada;
+}
+    
+    
+    public void finalizarPartida(Player ganador) {
+    if (ganador != null) {
+        int puntosActuales = ganador.getPuntos();
+        ganador.setPuntos(puntosActuales + 3);
+        
+        JOptionPane.showMessageDialog(null, "¡Felicidades " + ganador.getUsername() + "! Has ganado 3 puntos.");
+        
+        
+        // manager.registrarPartida(jugador1, jugador2, ganador);
+    }
+    
+    new VentanaPrincipal().setVisible(true);
+    //this.dispose();
+}
+
+    
+    
+    
+    
     
 }

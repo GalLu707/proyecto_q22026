@@ -89,11 +89,18 @@ public class VentanaPrincipal extends JFrame{
         
         contenedorBotones.add(panelBotones); 
 
-      
-        add(panelDatos, BorderLayout.NORTH);
-        add(contenedorBotones, BorderLayout.CENTER);
+         add(panelDatos, BorderLayout.NORTH);
+         add(contenedorBotones, BorderLayout.CENTER);
 
-        
+         btnReportes.addActionListener(e -> {
+
+             VentanaReportes repo = new VentanaReportes();
+
+             repo.setVisible(true);
+
+             this.dispose();
+         });
+
         btnLogOut.addActionListener(e -> {
             PlayerManager.setUsuarioLogueado(null);
             new VentanaInicio().setVisible(true);

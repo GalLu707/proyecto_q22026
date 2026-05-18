@@ -33,6 +33,12 @@ public class Player {
     public String getPassword() { 
         return password; 
     }
+
+    public void setPuntos(int puntos) {
+        this.puntos = puntos;
+    }
+    
+    
     
     public void setPassword(String password) { 
         this.password = password;
